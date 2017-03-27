@@ -25,6 +25,10 @@ public class Column {
 	
 	private String linkText;
 	
+	private String trueText;
+	
+	private String falseText;
+	
 	private Method getMethod;
 	
 	private int length = -1;
@@ -123,6 +127,22 @@ public class Column {
 
 	public void setLinkText(String linkText) {
 		this.linkText = linkText;
+	}
+
+	public String getTrueText() {
+		return trueText;
+	}
+
+	public void setTrueText(String trueText) {
+		this.trueText = trueText;
+	}
+
+	public String getFalseText() {
+		return falseText;
+	}
+
+	public void setFalseText(String falseText) {
+		this.falseText = falseText;
 	}
 
 	public int getScale() {

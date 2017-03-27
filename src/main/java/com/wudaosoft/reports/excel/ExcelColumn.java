@@ -38,6 +38,10 @@ public @interface ExcelColumn {
 	
 	String linkText() default "";
 	
+	String trueText() default "是";
+	
+	String falseText() default "否";
+	
 	int index() default 9999;
 	
 	int length() default -1;

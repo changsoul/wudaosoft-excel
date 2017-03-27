@@ -16,8 +16,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import jxl.Cell;
@@ -41,13 +43,13 @@ public class Excel {
 	
 	private List<Column> columns = new ArrayList<Column>(0);
 	
-	private List<? extends Object> dataList;
+	private Collection<? extends Object> dataList;
 	
-	public Excel(List<? extends Object> list) {
+	public Excel(Collection<? extends Object> list) {
 		this(list, false);
 	}
 	
-	public Excel(List<? extends Object> list, boolean writeTitle) {
+	public Excel(Collection<? extends Object> list, boolean writeTitle) {
 		this.dataList = list;
 		this.writeTitle = writeTitle;
 		
@@ -99,7 +101,7 @@ public class Excel {
 		if(dataList == null || dataList.size() == 0)
 			return;
 		
-		Class<?> clazz = dataList.get(0).getClass();
+		Class<?> clazz = dataList.iterator().next().getClass();
 
 		if (clazz.isAnnotationPresent(ExcelEnity.class)) {
 
@@ -130,6 +132,8 @@ public class Excel {
 				c.setIsHyperlink(ec.isHyperlink());
 				c.setPattern(ec.pattern());
 				c.setLinkText(ec.linkText());
+				c.setTrueText(ec.trueText());
+				c.setFalseText(ec.falseText());
 				c.setRoundingMode(ec.roundingMode());
 				c.setAlign(ec.align());
 				
@@ -196,8 +200,9 @@ public class Excel {
 		
 		rowIndex++;
 		
-		for(int i =0; i < dataList.size(); i++) {
-			Object data = dataList.get(i);
+		Iterator<?> iter = dataList.iterator();
+		while (iter.hasNext()) {
+			Object data = (Object) iter.next();
 			
 			for(int j =0; j < columns.size(); j++) {
 				Column c = columns.get(j);
@@ -232,15 +237,11 @@ public class Excel {
 						
 						boolean b = ((Boolean)value).booleanValue();
 						
-						String v = "";
-						
 						if(b) {
-							v = "是";
-							ExcelUtils.addStringCell(rowIndex, j, sheet, v, c);
+							ExcelUtils.addStringCell(rowIndex, j, sheet, c.getTrueText(), c);
 						}
 						else{
-							v = "否";
-							ExcelUtils.addStringCell(rowIndex, j, sheet, v, c, Colour.RED);
+							ExcelUtils.addStringCell(rowIndex, j, sheet, c.getFalseText(), c, Colour.RED);
 						}
 						
 						//ExcelUtils.addStringCell(rowIndex, j, sheet, v, c);
