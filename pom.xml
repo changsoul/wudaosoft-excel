@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.wudaosoft</groupId>
 	<artifactId>wudaosoft-excel</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.3</version>
 	<name>wudaosoft-excel</name>
 	<description>Wudaosoft Excel Tools</description>
 	<url>http://www.wudaosoft.com</url>

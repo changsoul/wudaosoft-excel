@@ -31,6 +31,8 @@ public class Column {
 	
 	private Method getMethod;
 	
+	private Method setMethod;
+	
 	private int length = -1;
 	
 	private int index = 9999;
@@ -79,6 +81,14 @@ public class Column {
 
 	public void setGetMethod(Method getMethod) {
 		this.getMethod = getMethod;
+	}
+
+	public Method getSetMethod() {
+		return setMethod;
+	}
+
+	public void setSetMethod(Method setMethod) {
+		this.setMethod = setMethod;
 	}
 
 	public int getLength() {
