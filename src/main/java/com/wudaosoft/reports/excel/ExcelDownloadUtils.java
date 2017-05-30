@@ -11,7 +11,7 @@ package com.wudaosoft.reports.excel;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
-import java.util.List;
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,19 +25,19 @@ import jxl.write.biff.RowsExceededException;
  */
 public class ExcelDownloadUtils {
 
-	public static void downloadExcel(List<? extends Object> list, HttpServletRequest req, HttpServletResponse resp)
+	public static void downloadExcel(Collection<? extends Object> list, HttpServletRequest req, HttpServletResponse resp)
 			throws IOException, RowsExceededException, WriteException, IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
 		downloadExcel(list, null, req, resp);
 	}
 
-	public static void downloadExcel(List<? extends Object> list, String filename, HttpServletRequest req,
+	public static void downloadExcel(Collection<? extends Object> list, String filename, HttpServletRequest req,
 			HttpServletResponse resp) throws IOException, RowsExceededException, WriteException,
 			IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		downloadExcel(list, filename, false, req, resp);
 	}
 
-	public static void downloadExcel(List<? extends Object> list, String filename, boolean writeTitle,
+	public static void downloadExcel(Collection<? extends Object> list, String filename, boolean writeTitle,
 			HttpServletRequest req, HttpServletResponse resp) throws IOException, RowsExceededException, WriteException,
 			IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
