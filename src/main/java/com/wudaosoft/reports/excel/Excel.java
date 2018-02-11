@@ -1,11 +1,18 @@
-/* 
- * Copyright(c)2010-2014 WUDAOSOFT.COM
+/**
+ *    Copyright 2009-2018 Wudao Software Studio(wudaosoft.com)
  * 
- * Email:changsoul.wu@gmail.com
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
  * 
- * QQ:275100589
- */ 
- 
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
 package com.wudaosoft.reports.excel;
 
 import java.io.File;
@@ -41,6 +48,8 @@ public class Excel {
 
 	private boolean writeTitle = false;
 	
+	private Class<?> entityClazz;
+	
 	private List<Column> columns = new ArrayList<Column>(0);
 	
 	private Collection<? extends Object> dataList;
@@ -52,6 +61,12 @@ public class Excel {
 	public Excel(Collection<? extends Object> list, boolean writeTitle) {
 		this.dataList = list;
 		this.writeTitle = writeTitle;
+		
+		processAnnotation();
+	}
+	
+	public Excel(Class<?> entityClazz) {
+		this.entityClazz = entityClazz;
 		
 		processAnnotation();
 	}
@@ -98,14 +113,14 @@ public class Excel {
 
 	private void processAnnotation() {
 		
-		if(dataList == null || dataList.size() == 0)
+		if(dataList == null || dataList.isEmpty())
 			return;
 		
-		Class<?> clazz = dataList.iterator().next().getClass();
+		Class<?> clazz = entityClazz != null ? entityClazz : dataList.iterator().next().getClass();
 
-		if (clazz.isAnnotationPresent(ExcelEnity.class)) {
+		if (clazz.isAnnotationPresent(ExcelEntity.class)) {
 
-			ExcelEnity annotation = clazz.getAnnotation(ExcelEnity.class);
+			ExcelEntity annotation = clazz.getAnnotation(ExcelEntity.class);
 
 			if("data".equals(title))
 				title = annotation.value();
@@ -172,13 +187,38 @@ public class Excel {
 	}
 	
 	private void processData(WritableWorkbook book) throws RowsExceededException, WriteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, IOException {
+		processData(book, null, 0, 1);
+	}
+	
+	/**
+	 * 
+	 * @param book
+	 * @param sheetDataList
+	 * @param sheetIndex from 0
+	 * @param totalSheet min 1
+	 * @throws RowsExceededException
+	 * @throws WriteException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws IOException
+	 */
+	public void processData(WritableWorkbook book, Collection<? extends Object> sheetDataList, int sheetIndex, int totalSheet) throws RowsExceededException, WriteException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, IOException {
 		
-		WritableSheet sheet = book.createSheet(title, 0);
+		if (sheetIndex < 0) {
+			sheetIndex = 0;
+		}
+		
+		String sheetName = totalSheet > 1 ? this.title + (sheetIndex + 1) : this.title;
+		
+		Collection<? extends Object> tempDataList = sheetDataList == null ? this.dataList : sheetDataList;
+		
+		WritableSheet sheet = book.createSheet(sheetName, sheetIndex);
 		
 		int rowIndex = 0;
 		
 		if(writeTitle) {
-			ExcelUtils.addTitleName(rowIndex, 0, sheet, title);
+			ExcelUtils.addTitleName(rowIndex, 0, sheet, this.title);
 			
 			sheet.mergeCells(0, 0, columns.size()-1, 0);
 			
@@ -200,7 +240,7 @@ public class Excel {
 		
 		rowIndex++;
 		
-		Iterator<?> iter = dataList.iterator();
+		Iterator<?> iter = tempDataList.iterator();
 		while (iter.hasNext()) {
 			Object data = (Object) iter.next();
 			
@@ -264,8 +304,10 @@ public class Excel {
 			sheet.setColumnView(i, cv);
 		}
 		
-		book.write();
-        book.close();
+		if(totalSheet == 1) {
+			book.write();
+	        book.close();
+		}
 	}
 	
 	private int getCellWidth(Cell cell) {
