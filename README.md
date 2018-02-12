@@ -16,13 +16,13 @@ Wudaosoft Excel Tools.
 <dependency>
     <groupId>com.wudaosoft</groupId>
     <artifactId>wudaosoft-excel</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 ## Gradle via JCenter
 
 ``` groovy
-compile 'com.wudaosoft:wudaosoft-excel:1.0.3'
+compile 'com.wudaosoft:wudaosoft-excel:1.0.4'
 ```
 ### *License*
 

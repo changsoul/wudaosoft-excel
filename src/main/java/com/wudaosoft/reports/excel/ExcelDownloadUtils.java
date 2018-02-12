@@ -17,6 +17,7 @@
 package com.wudaosoft.reports.excel;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URLEncoder;
 import java.util.Collection;
@@ -33,9 +34,9 @@ import jxl.write.biff.RowsExceededException;
  */
 public class ExcelDownloadUtils {
 
-	public static void downloadExcel(Collection<? extends Object> list, HttpServletRequest req, HttpServletResponse resp)
-			throws IOException, RowsExceededException, WriteException, IllegalArgumentException, IllegalAccessException,
-			InvocationTargetException {
+	public static void downloadExcel(Collection<? extends Object> list, HttpServletRequest req,
+			HttpServletResponse resp) throws IOException, RowsExceededException, WriteException,
+			IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		downloadExcel(list, null, req, resp);
 	}
 
@@ -71,14 +72,11 @@ public class ExcelDownloadUtils {
 
 			else if (userAgent.indexOf("opera") != -1) {
 				rtn = "filename*=UTF-8''" + newFileName;
-			}
-			else if (userAgent.indexOf("safari") != -1) {
+			} else if (userAgent.indexOf("safari") != -1) {
 				rtn = "filename=\"" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1") + "\"";
-			}
-			else if (userAgent.indexOf("applewebkit") != -1) {
+			} else if (userAgent.indexOf("applewebkit") != -1) {
 				rtn = "filename=\"" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1") + "\"";
-			}
-			else if (userAgent.indexOf("mozilla") != -1) {
+			} else if (userAgent.indexOf("mozilla") != -1) {
 				rtn = "filename*=UTF-8''" + newFileName;
 			}
 		}
@@ -89,5 +87,44 @@ public class ExcelDownloadUtils {
 		// response.addHeader("Content-Length", "" + file.length());
 
 		xls.generateExcel(resp.getOutputStream());
+	}
+
+	public static void downloadExcel(String filename, long fileLength, HttpServletRequest req, HttpServletResponse resp)
+			throws UnsupportedEncodingException {
+
+		if (filename == null)
+			filename = "data";
+
+		String fileName = filename + ".xls";
+
+		String newFileName = URLEncoder.encode(fileName, "UTF8");
+
+		String userAgent = req.getHeader("User-Agent");
+
+		String rtn = "filename=\"" + newFileName + "\"";
+
+		if (userAgent != null) {
+
+			userAgent = userAgent.toLowerCase();
+
+			if (userAgent.indexOf("msie") != -1) {
+				rtn = "filename=\"" + newFileName + "\"";
+			}
+
+			else if (userAgent.indexOf("opera") != -1) {
+				rtn = "filename*=UTF-8''" + newFileName;
+			} else if (userAgent.indexOf("safari") != -1) {
+				rtn = "filename=\"" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1") + "\"";
+			} else if (userAgent.indexOf("applewebkit") != -1) {
+				rtn = "filename=\"" + new String(fileName.getBytes("UTF-8"), "ISO-8859-1") + "\"";
+			} else if (userAgent.indexOf("mozilla") != -1) {
+				rtn = "filename*=UTF-8''" + newFileName;
+			}
+		}
+
+		resp.reset();
+		resp.setContentType("application/vnd.ms-excel;charset=utf-8");
+		resp.addHeader("Content-Disposition", "attachment;" + rtn);
+		resp.addHeader("Content-Length", "" + fileLength);
 	}
 }
