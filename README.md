@@ -16,20 +16,20 @@ Wudaosoft Excel Tools.
 <dependency>
     <groupId>com.wudaosoft</groupId>
     <artifactId>wudaosoft-excel</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 </dependency>
 ```
 ## Gradle via JCenter
 
 ``` groovy
-compile 'com.wudaosoft:wudaosoft-excel:1.0.4'
+compile 'com.wudaosoft:wudaosoft-excel:1.0.5'
 ```
 ### *License*
 
 wudaosoft-excel is released under the [Apache 2.0 license](LICENSE).
 
 ```
-Copyright 2009-2017 Wudao Software Studio
+Copyright 2009-2018 Wudao Software Studio
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
