@@ -1,13 +1,15 @@
 # IDE for Developer Tools Profiles
-/target/
-/bin/
-/.settings/
-/.classpath
-/.project
+target/
+bin/
+logs/
+.settings/
+.classpath
+.project
 .idea/
 .svn/
 .DS_Store
 *.iml
+.flattened-pom.xml
 
 *.class
 
